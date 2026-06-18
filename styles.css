@@ -1043,6 +1043,22 @@ input[type=range]::-webkit-slider-runnable-track {
     cursor: pointer;
 }
 
+/* Tablet Responsive */
+@media (max-width: 1024px) {
+    .surah-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    .pdf-sidebar {
+        width: 220px;
+    }
+    .fp-title {
+        font-size: 3rem;
+    }
+    #content-area {
+        padding: 0 1.5rem 6rem 1.5rem;
+    }
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     #app {
@@ -1050,33 +1066,25 @@ input[type=range]::-webkit-slider-runnable-track {
     }
 
     .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        border-right: none;
-        border-bottom: 1px solid var(--border-color);
-        order: 2;
-        /* Move to bottom if we want a tab bar, but here we keep top for now or make it a bottom nav */
-    }
-
-    /* Let's make it a bottom nav for mobile */
-    .sidebar {
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 100;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
         justify-content: space-around;
+        align-items: center;
         padding: 0.5rem;
+        border-right: none;
         border-top: 1px solid var(--border-color);
+        background-color: var(--bg-secondary);
+        z-index: 100;
     }
 
     .logo-container,
     .theme-toggle {
         display: none;
-        /* Hide logo/toggle from bottom nav */
     }
 
     .nav-links {
@@ -1085,37 +1093,119 @@ input[type=range]::-webkit-slider-runnable-track {
         width: 100%;
     }
 
+    .nav-btn {
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        justify-content: center;
+        align-items: center;
+    }
+
     .nav-btn span {
-        display: none;
-        /* Hide text, show only icons */
+        font-size: 0.7rem;
+        display: block;
     }
 
     .main-content {
-        height: calc(100vh - 60px);
-        /* Adjust height for nav */
+        height: calc(100vh - 70px);
+        margin-bottom: 70px; /* Space for bottom nav */
     }
 
     .top-bar {
         padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
     }
 
     .search-container {
         width: 100%;
     }
 
+    .date-display {
+        text-align: center;
+    }
+
     #content-area {
         padding: 0 1rem 6rem 1rem;
     }
 
-    .audio-player {
-        bottom: 60px;
-        /* Above Bottom Nav */
-        padding: 0.75rem;
+    /* Hero Section Fixes */
+    .hero {
+        padding: 2rem 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-translation {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-meta {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 1rem;
+    }
+
+    /* Audio Player */
+    .audio-player {
+        bottom: 70px;
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
+        border-radius: 1rem 1rem 0 0;
     }
 
     .audio-progress {
         width: 100%;
+    }
+
+    /* PDF View Fixes */
+    .pdf-reader-layout {
+        flex-direction: column;
+        height: calc(100vh - 180px);
+    }
+
+    .pdf-sidebar {
+        width: 100%;
+        height: 180px;
+        flex-shrink: 0;
+    }
+
+    .fp-title {
+        font-size: 2rem;
+    }
+    
+    .front-page-border {
+        padding: 2rem 1rem;
+    }
+
+    /* Reading View Fixes */
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        width: 100%;
+    }
+    
+    .read-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+        position: static; /* Remove sticky on mobile to save space */
+    }
+
+    .read-actions {
+        justify-content: center;
+    }
+    
+    .ayah-text-ar {
+        font-size: 1.8rem;
+    }
+    
+    .bismillah-container {
+        font-size: 2rem;
     }
 }
