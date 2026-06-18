@@ -579,10 +579,38 @@ function updatePlayBtnIO() {
     lucide.createIcons();
 }
 
-function jumpToPdfSurah(id) {
-    // Instead of alerting, we now open the "readable written content" (Interactive Text Reader)
-    // for the selected Surah. This provides the best reading experience with translations.
-    openSurah(id);
+async function jumpToPdfSurah(id) {
+    switchView('pdf');
+    document.getElementById('quran-front-page').classList.add('hidden');
+    document.getElementById('pdf-viewer-container').classList.remove('hidden');
+
+    const container = document.getElementById('mushaf-content');
+    container.innerHTML = '<div style="text-align:center; font-size: 1rem; color: var(--text-secondary);">Loading...</div>';
+
+    try {
+        // Fetch up to 300 ayahs (covers most surahs, Baqarah will need pagination if we want all, but 300 is max per page)
+        // For Baqarah (286 verses), per_page=300 works perfectly.
+        const res = await fetch(`${API_BASE}/verses/by_chapter/${id}?language=en&words=false&fields=text_uthmani&per_page=300`);
+        const data = await res.json();
+        
+        let html = '';
+        
+        // Add Bismillah if not Fatiha or Tawbah
+        if (id !== 1 && id !== 9) {
+            html += '<div style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; display: block; width: 100%;">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>';
+        }
+
+        data.verses.forEach(v => {
+            const ayahNum = v.verse_key.split(':')[1];
+            const arabicNum = toArabicNumerals(ayahNum);
+            html += `<span>${v.text_uthmani} <span style="color: var(--accent-color); font-size: 0.8em; margin: 0 5px;">۝${arabicNum}</span> </span>`;
+        });
+
+        container.innerHTML = html;
+        container.parentElement.scrollTop = 0;
+    } catch (e) {
+        container.innerHTML = '<div style="text-align:center; color: red;">Failed to load text.</div>';
+    }
 }
 
 // Expose functions to global scope for HTML onclick
