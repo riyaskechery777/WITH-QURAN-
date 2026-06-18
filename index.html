@@ -51,8 +51,21 @@
                 </button>
             </div>
 
-            <div class="theme-toggle">
-                <button id="theme-btn" title="Toggle Theme">
+            <div class="theme-toggle" style="display: flex; flex-direction: column; gap: 1rem; width: 100%;">
+                <div id="user-profile" class="hidden" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; border-radius: 0.5rem; background: var(--bg-primary); margin-bottom: 0.5rem;">
+                    <img id="user-avatar" src="" alt="Profile" style="width: 32px; height: 32px; border-radius: 50%;">
+                    <div style="display: flex; flex-direction: column; overflow: hidden;">
+                        <span id="user-name" style="font-size: 0.8rem; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">User</span>
+                        <span style="font-size: 0.7rem; color: var(--accent-color); cursor: pointer;" id="logout-btn">Sign Out</span>
+                    </div>
+                </div>
+
+                <button id="login-btn" class="nav-btn" title="Sign In" style="width: 100%; justify-content: center; background: rgba(16, 185, 129, 0.1); color: var(--accent-color);">
+                    <i data-lucide="log-in"></i>
+                    <span>Sign In</span>
+                </button>
+
+                <button id="theme-btn" title="Toggle Theme" style="align-self: flex-start; margin-top: auto;">
                     <i data-lucide="moon"></i>
                 </button>
             </div>
@@ -248,6 +261,11 @@
             <audio id="main-audio"></audio>
         </div>
     </div>
+
+    <!-- Firebase SDK (Compat version for vanilla JS) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <!-- Scripts -->
     <script src="script.js"></script>

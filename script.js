@@ -1,3 +1,21 @@
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCgT_toG_8iydM3VCBE4DGW8XCE4aykRmQ",
+  authDomain: "with-quran.firebaseapp.com",
+  projectId: "with-quran",
+  storageBucket: "with-quran.firebasestorage.app",
+  messagingSenderId: "15818126128",
+  appId: "1:15818126128:web:c0b04500e72af17c0acef5",
+  measurementId: "G-JLST517CJT"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let currentUser = null;
+
 const state = {
     currentView: 'home',
     quranData: [], // Stores Surah list
@@ -40,6 +58,7 @@ async function init() {
     applyTheme();
     updateDate();
     setupEventListeners();
+    setupFirebase();
     await fetchSurahs();
     loadHeroAyah();
     renderSurahs(state.quranData);
@@ -142,6 +161,74 @@ function setupEventListeners() {
         const time = (e.target.value / 100) * audioPlayer.duration;
         audioPlayer.currentTime = time;
     });
+}
+
+function setupFirebase() {
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userProfile = document.getElementById('user-profile');
+    const userAvatar = document.getElementById('user-avatar');
+    const userName = document.getElementById('user-name');
+
+    loginBtn.addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).catch(error => alert("Login failed: " + error.message));
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        auth.signOut();
+    });
+
+    auth.onAuthStateChanged(async (user) => {
+        currentUser = user;
+        if (user) {
+            loginBtn.style.display = 'none';
+            userProfile.classList.remove('hidden');
+            userAvatar.src = user.photoURL || '';
+            userName.textContent = user.displayName;
+            
+            // Fetch bookmarks from Firestore
+            await syncBookmarksFromCloud();
+        } else {
+            loginBtn.style.display = 'flex';
+            userProfile.classList.add('hidden');
+        }
+    });
+}
+
+async function syncBookmarksFromCloud() {
+    if (!currentUser) return;
+    try {
+        const docRef = db.collection('users').doc(currentUser.uid);
+        const doc = await docRef.get();
+        if (doc.exists) {
+            const cloudBookmarks = doc.data().bookmarks || [];
+            // Merge with local
+            const merged = [...new Set([...state.bookmarks, ...cloudBookmarks])];
+            state.bookmarks = merged;
+            localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+            
+            // Save merged back to cloud
+            await docRef.set({ bookmarks: state.bookmarks }, { merge: true });
+        } else {
+            // First time login, save local to cloud
+            await docRef.set({ bookmarks: state.bookmarks });
+        }
+        if (state.currentView === 'bookmarks') renderBookmarks();
+    } catch (e) {
+        console.error("Error syncing bookmarks", e);
+    }
+}
+
+async function saveBookmarksToCloud() {
+    if (!currentUser) return;
+    try {
+        await db.collection('users').doc(currentUser.uid).set({
+            bookmarks: state.bookmarks
+        }, { merge: true });
+    } catch (e) {
+        console.error("Failed to save to cloud", e);
+    }
 }
 
 // Logic Functions
@@ -397,6 +484,7 @@ async function openBookmarkedAyah(key) {
 function removeBookmark(key) {
     state.bookmarks = state.bookmarks.filter(b => b !== key);
     localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+    saveBookmarksToCloud();
     renderBookmarks();
 }
 
@@ -404,6 +492,7 @@ function bookmarkAyah(key) {
     if (!state.bookmarks.includes(key)) {
         state.bookmarks.push(key);
         localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+        saveBookmarksToCloud();
         alert('Ayah Bookmarked!');
     } else {
         alert('Already bookmarked');
