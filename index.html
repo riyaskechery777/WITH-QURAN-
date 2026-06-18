@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WITH QURAN | Read • Reflect • Live</title>
+    <meta name="description" content="A peaceful, distraction-free Quran reading experience.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Scheherazade+New:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Sidebar / Navigation -->
+        <nav class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i data-lucide="book-open"></i>
+                </div>
+                <span class="logo-text">WITH QURAN</span>
+            </div>
+
+            <div class="nav-links">
+                <button class="nav-btn active" data-view="home" title="Home">
+                    <i data-lucide="home"></i>
+                    <span>Home</span>
+                </button>
+                <button class="nav-btn" data-view="pdf" title="Full Quran (PDF)">
+                    <i data-lucide="file-text"></i>
+                    <span>Read PDF</span>
+                </button>
+                <button class="nav-btn" data-view="bookmarks" title="Bookmarks">
+                    <i data-lucide="bookmark"></i>
+                    <span>Bookmarks</span>
+                </button>
+                <button class="nav-btn" data-view="settings" title="Settings">
+                    <i data-lucide="settings"></i>
+                    <span>Preferences</span>
+                </button>
+            </div>
+
+            <div class="theme-toggle">
+                <button id="theme-btn" title="Toggle Theme">
+                    <i data-lucide="moon"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <div class="search-container">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="global-search" placeholder="Search Surah (e.g., Al-Mulk) or Ayah...">
+                </div>
+                <div class="date-display" id="hijri-date">
+                    Loading Date...
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div id="content-area">
+                <!-- Home View -->
+                <div id="view-home" class="view active">
+                    <!-- Hero Section -->
+                    <section class="hero">
+                        <div class="hero-content">
+                            <span class="hero-subtitle">Verse of the Day</span>
+                            <h2 class="hero-title" id="daily-ayah-text">Loading...</h2>
+                            <p class="hero-translation" id="daily-ayah-translation">Please wait...</p>
+                            <div class="hero-meta" id="daily-ayah-meta">
+                                <span>Surah ...</span>
+                                <button class="play-btn-hero" id="play-daily-ayah"><i data-lucide="play"></i>
+                                    Listen</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Surah List -->
+                    <section class="surah-list-container">
+                        <div class="section-header">
+                            <h3>Surahs</h3>
+                            <div class="view-controls">
+                                <button class="view-toggle active" data-mode="grid"><i data-lucide="grid"></i></button>
+                                <button class="view-toggle" data-mode="list"><i data-lucide="list"></i></button>
+                            </div>
+                        </div>
+                        <div id="surah-grid" class="surah-grid">
+                            <!-- Surah Cards Injected Here -->
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- PDF View -->
+                <div id="view-pdf" class="view hidden">
+                    <div class="pdf-reader-layout">
+                        <aside class="pdf-sidebar">
+                            <div class="pdf-sidebar-header">
+                                <h3>Quran Index</h3>
+                            </div>
+                            <div id="pdf-surah-index" class="pdf-index-list">
+                                <!-- Surah list for PDF/Text switching -->
+                            </div>
+                        </aside>
+                        <div class="pdf-main-area">
+                            <!-- New Front Page / Welcome View -->
+                            <div id="quran-front-page" class="front-page-view">
+                                <div class="front-page-border">
+                                    <div class="fp-header">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>
+                                    <h1 class="fp-title">WITH QURAN</h1>
+                                    <div class="fp-subtitle">Read • Reflect • Live the Qur'an</div>
+                                    <div class="fp-art">
+                                        <i data-lucide="book-open" style="width: 80px; height: 80px;"></i>
+                                    </div>
+                                    <p class="fp-footer">Uthmani Script • Resmul Usmani</p>
+                                </div>
+                            </div>
+                            <div id="pdf-viewer-container" class="pdf-container hidden">
+                                <iframe id="pdf-viewer" src="quran.pdf" width="100%" height="100%"
+                                    frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Surah Detail/Reading View -->
+                <div id="view-read" class="view hidden">
+                    <div id="fatiha-bg-layer" class="fatiha-overlay hidden"></div>
+                    <div class="read-header">
+                        <div class="header-left">
+                            <button class="back-btn" id="back-to-home"><i data-lucide="arrow-left"></i></button>
+                            <div class="surah-nav-controls">
+                                <button id="prev-surah-btn" class="nav-arrow" title="Previous Surah"><i
+                                        data-lucide="chevron-left"></i></button>
+                                <select id="surah-selector" class="surah-dropdown">
+                                    <!-- Options injected via JS -->
+                                </select>
+                                <button id="next-surah-btn" class="nav-arrow" title="Next Surah"><i
+                                        data-lucide="chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="read-actions">
+                            <button id="view-in-pdf-btn" class="action-btn" title="View in PDF">
+                                <i data-lucide="file-text"></i> PDF
+                            </button>
+                            <button id="play-surah-btn" class="action-btn" title="Play Entire Surah">
+                                <i data-lucide="play"></i> Play
+                            </button>
+                            <button id="toggle-info-panel" class="action-btn" title="Info"><i
+                                    data-lucide="info"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="bismillah-container" id="bismillah-section">
+                        <!-- Corrected Bismillah Text -->
+                        <span class="arabic-text bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</span>
+                    </div>
+
+                    <div id="ayah-container" class="ayah-container">
+                        <!-- Ayahs Injected Here -->
+                    </div>
+                </div>
+
+                <!-- Bookmarks View -->
+                <div id="view-bookmarks" class="view hidden">
+                    <div class="settings-header" style="margin-top: 2rem;">
+                        <i data-lucide="bookmark" style="width: 48px; height: 48px; color: var(--accent-color); margin-bottom: 1rem;"></i>
+                        <h2>My Bookmarks</h2>
+                        <p style="color: var(--text-secondary);">Your saved verses</p>
+                    </div>
+                    <div id="bookmarks-list" class="bookmarks-list">
+                        <p class="empty-state">No bookmarks yet.</p>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="view-settings" class="view hidden">
+                    <div class="settings-card">
+                        <div class="settings-header">
+                            <i data-lucide="settings-2"
+                                style="width: 48px; height: 48px; color: var(--accent-color); margin-bottom: 1rem;"></i>
+                            <h2>Preferences</h2>
+                            <p style="color: var(--text-secondary);">Customize your reading experience</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Translation Language</label>
+                            <div class="settings-control">
+                                <select id="setting-language" class="settings-select">
+                                    <option value="en">English (Sahih International)</option>
+                                    <option value="ml">Malayalam (Abdul Hameed & Parappoor)</option>
+                                    <option value="hi">Hindi (Muhammad Farooq Khan)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Arabic Script</label>
+                            <div class="settings-control">
+                                <select id="setting-script" class="settings-select">
+                                    <option value="uthmani">Uthmani</option>
+                                    <option value="indopak">IndoPak</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Arabic Font Size</label>
+                            <div class="range-slider-container">
+                                <span style="font-size: 0.9rem; color: var(--text-secondary);">Small</span>
+                                <input type="range" id="setting-fontsize" min="18" max="70" value="32">
+                                <span style="font-size: 1.1rem; font-weight: bold;">Large</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Fixed Audio Player -->
+        <div id="audio-player-bar" class="audio-player hidden">
+            <div class="audio-info">
+                <span id="audio-surah-name">Al-Fatiha</span>
+                <span id="audio-ayah-number">Ayah 1</span>
+            </div>
+            <div class="audio-controls">
+                <button id="audio-prev"><i data-lucide="skip-back"></i></button>
+                <button id="audio-play-pause" class="main-play-btn"><i data-lucide="play"></i></button>
+                <button id="audio-next"><i data-lucide="skip-forward"></i></button>
+            </div>
+            <div class="audio-progress">
+                <input type="range" id="audio-seeker" value="0" min="0" max="100">
+            </div>
+            <audio id="main-audio"></audio>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
