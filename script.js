@@ -339,15 +339,29 @@ function renderSurahs(list) {
 async function loadHeroAyah() {
     // Random Ayah for demo: 2:255 (Ayatul Kursi)
     try {
-        const res2 = await fetch(`${API_BASE}/verses/by_key/2:255?language=en&words=true&translations=131&fields=text_uthmani,text_indopak`);
+        const res2 = await fetch(`${API_BASE}/verses/by_key/2:255?language=en&words=true&translations=85&fields=text_uthmani,text_indopak`);
         const data = await res2.json();
 
         if (data.verse) {
             document.getElementById('daily-ayah-text').innerText = data.verse.text_uthmani;
-            document.getElementById('daily-ayah-translation').innerText = data.verse.translations[0].text.replace(/<[^>]*>?/gm, ''); // strip html
+            
+            // Safe fallback for translation
+            let translationText = "Allah - there is no deity except Him, the Ever-Living, the Sustainer of [all] existence.";
+            if (data.verse.translations && data.verse.translations.length > 0) {
+                translationText = data.verse.translations[0].text.replace(/<[^>]*>?/gm, ''); // strip html
+            }
+            document.getElementById('daily-ayah-translation').innerText = translationText;
+            
             document.getElementById('daily-ayah-meta').innerHTML = `<span>Surah Al-Baqarah, Ayah 255</span><button class="play-btn-hero"><i data-lucide="play"></i> Listen</button>`;
 
-            document.querySelector('.play-btn-hero').addEventListener('click', () => playAyah("2:255"));
+            // Wait a tick for DOM to update
+            setTimeout(() => {
+                const btn = document.querySelector('.play-btn-hero');
+                if (btn) {
+                    btn.addEventListener('click', () => window.playAyah("2:255"));
+                }
+                lucide.createIcons();
+            }, 50);
         }
     } catch (e) {
         console.log("Hero fetch error", e);
