@@ -393,11 +393,11 @@ async function openSurah(id) {
     const readView = document.getElementById('view-read');
     const fatihaLayer = document.getElementById('fatiha-bg-layer');
     if (id === 1) {
-        readView.classList.add('fatiha-mode');
-        fatihaLayer.classList.remove('hidden');
+        if (readView) readView.classList.add('fatiha-mode');
+        if (fatihaLayer) fatihaLayer.classList.remove('hidden');
     } else {
-        readView.classList.remove('fatiha-mode');
-        fatihaLayer.classList.add('hidden');
+        if (readView) readView.classList.remove('fatiha-mode');
+        if (fatihaLayer) fatihaLayer.classList.add('hidden');
     }
 
     // Bismillah Logic
