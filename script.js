@@ -608,7 +608,6 @@ async function jumpToPdfSurah(id) {
 window.playAyah = playAyah;
 window.bookmarkAyah = bookmarkAyah;
 window.jumpToPdfSurah = jumpToPdfSurah;
-window.showFrontPage = showFrontPage;
 window.openBookmarkedAyah = openBookmarkedAyah;
 window.removeBookmark = removeBookmark;
 
