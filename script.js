@@ -256,6 +256,16 @@ function switchView(viewName) {
         target.classList.add('active');
     }
 
+    // Hide search bar unless we are on the home view
+    const searchContainer = document.querySelector('.search-container');
+    if (searchContainer) {
+        if (viewName === 'home') {
+            searchContainer.style.display = 'flex';
+        } else {
+            searchContainer.style.display = 'none';
+        }
+    }
+
     if (viewName === 'pdf') {
         const mushafContent = document.getElementById('mushaf-content');
         if (!mushafContent.innerHTML.trim() || mushafContent.innerHTML.includes('Loading')) {
@@ -604,10 +614,17 @@ async function jumpToPdfSurah(id) {
     }
 }
 
+function openPdfForCurrentSurah() {
+    if (state.currentSurah && state.currentSurah.id) {
+        jumpToPdfSurah(state.currentSurah.id);
+    }
+}
+
 // Expose functions to global scope for HTML onclick
 window.playAyah = playAyah;
 window.bookmarkAyah = bookmarkAyah;
 window.jumpToPdfSurah = jumpToPdfSurah;
+window.openPdfForCurrentSurah = openPdfForCurrentSurah;
 window.openBookmarkedAyah = openBookmarkedAyah;
 window.removeBookmark = removeBookmark;
 
