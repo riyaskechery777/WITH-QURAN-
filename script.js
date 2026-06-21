@@ -256,6 +256,13 @@ function switchView(viewName) {
         target.classList.add('active');
     }
 
+    if (viewName === 'pdf') {
+        const mushafContent = document.getElementById('mushaf-content');
+        if (!mushafContent.innerHTML.trim() || mushafContent.innerHTML.includes('Loading')) {
+            jumpToPdfSurah(1); // Load Fatiha by default
+        }
+    }
+
     if (viewName === 'bookmarks') {
         renderBookmarks();
     }
@@ -281,11 +288,7 @@ function populateSurahDropdown(chapters) {
     if (pdfIndex) {
         // Special Items Prepend
         let html = `
-            <div class="pdf-index-item special-item-fp" onclick="showFrontPage()">
-                <i data-lucide="book" style="width: 18px;"></i>
-                 <span>Front Page</span>
-            </div>
-            <div class="pdf-index-item special-item-fatiha" onclick="openSurah(1)">
+            <div class="pdf-index-item special-item-fatiha" onclick="jumpToPdfSurah(1)">
                 <span>✨ Surah Al-Fatiha</span>
                 <span class="arabic-text-sm">الفاتحة</span>
             </div>
@@ -302,18 +305,6 @@ function populateSurahDropdown(chapters) {
         pdfIndex.innerHTML = html;
         lucide.createIcons();
     }
-}
-
-function showFrontPage() {
-    switchView('pdf');
-    document.getElementById('quran-front-page').classList.remove('hidden');
-    document.getElementById('pdf-viewer-container').classList.add('hidden');
-}
-
-function jumpToPdfSurah(id) {
-    // Navigate PDF if we want to stay in view-pdf, or openSurah (Text)
-    // The user wants "one by one readable content" so we open the reader.
-    openSurah(id);
 }
 
 function renderSurahs(list) {
@@ -581,11 +572,11 @@ function updatePlayBtnIO() {
 
 async function jumpToPdfSurah(id) {
     switchView('pdf');
-    document.getElementById('quran-front-page').classList.add('hidden');
-    document.getElementById('pdf-viewer-container').classList.remove('hidden');
+    const container = document.getElementById('pdf-viewer-container');
+    container.classList.remove('hidden');
 
-    const container = document.getElementById('mushaf-content');
-    container.innerHTML = '<div style="text-align:center; font-size: 1rem; color: var(--text-secondary);">Loading...</div>';
+    const mushafContent = document.getElementById('mushaf-content');
+    mushafContent.innerHTML = '<div style="text-align:center; font-size: 1rem; color: var(--text-secondary);">Loading...</div>';
 
     try {
         // Fetch up to 300 ayahs (covers most surahs, Baqarah will need pagination if we want all, but 300 is max per page)
@@ -606,10 +597,10 @@ async function jumpToPdfSurah(id) {
             html += `<span>${v.text_uthmani} <span style="color: var(--accent-color); font-size: 0.8em; margin: 0 5px;">۝${arabicNum}</span> </span>`;
         });
 
-        container.innerHTML = html;
-        container.parentElement.scrollTop = 0;
+        mushafContent.innerHTML = html;
+        container.scrollTop = 0;
     } catch (e) {
-        container.innerHTML = '<div style="text-align:center; color: red;">Failed to load text.</div>';
+        mushafContent.innerHTML = '<div style="text-align:center; color: red;">Failed to load text.</div>';
     }
 }
 
