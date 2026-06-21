@@ -313,6 +313,18 @@ function populateSurahDropdown(chapters) {
         `).join('');
 
         pdfIndex.innerHTML = html;
+        
+        // Also populate read view index
+        const readIndex = document.getElementById('read-surah-index');
+        if (readIndex) {
+            readIndex.innerHTML = chapters.map(s => `
+                <div class="pdf-index-item" onclick="openSurah(${s.id}); toggleReadSidebar();">
+                    <span>${s.id}. ${s.name_simple}</span>
+                    <span class="arabic-text-sm">${s.name_arabic}</span>
+                </div>
+            `).join('');
+        }
+        
         lucide.createIcons();
     }
 }
@@ -620,6 +632,13 @@ function openPdfForCurrentSurah() {
     }
 }
 
+function toggleReadSidebar() {
+    const sidebar = document.getElementById('read-sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+    }
+}
+
 // Expose functions to global scope for HTML onclick
 window.playAyah = playAyah;
 window.bookmarkAyah = bookmarkAyah;
@@ -627,6 +646,7 @@ window.jumpToPdfSurah = jumpToPdfSurah;
 window.openPdfForCurrentSurah = openPdfForCurrentSurah;
 window.openBookmarkedAyah = openBookmarkedAyah;
 window.removeBookmark = removeBookmark;
+window.toggleReadSidebar = toggleReadSidebar;
 
 // Start
 init();

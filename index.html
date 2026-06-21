@@ -143,41 +143,55 @@
                     </div>
                 </div>
 
-                <!-- Surah Detail/Reading View -->
+                <!-- Reader View -->
                 <div id="view-read" class="view hidden">
-                    <div id="fatiha-bg-layer" class="fatiha-overlay hidden"></div>
-                    <div class="read-header">
-                        <div class="header-left">
-                            <button class="back-btn" id="back-to-home"><i data-lucide="arrow-left"></i></button>
-                            <div class="surah-nav-controls">
-                                <button id="prev-surah-btn" class="nav-arrow" title="Previous Surah"><i
-                                        data-lucide="chevron-left"></i></button>
-                                <select id="surah-selector" class="surah-dropdown">
-                                    <!-- Options injected via JS -->
-                                </select>
-                                <button id="next-surah-btn" class="nav-arrow" title="Next Surah"><i
-                                        data-lucide="chevron-right"></i></button>
+                    <div class="read-layout">
+                        <!-- Left Section: Quran Index -->
+                        <aside class="read-sidebar" id="read-sidebar">
+                            <div class="sidebar-header">
+                                <h3>Quran Index</h3>
+                                <button class="close-sidebar-btn d-mobile" onclick="toggleReadSidebar()"><i data-lucide="x"></i></button>
+                            </div>
+                            <div id="read-surah-index" class="index-list">
+                                <!-- Surah list injected via JS -->
+                            </div>
+                        </aside>
+
+                        <!-- Right Section: Quran Text -->
+                        <div class="read-main-area">
+                            <div class="read-header sticky-header">
+                                <div class="header-left">
+                                    <button class="icon-btn d-mobile" onclick="toggleReadSidebar()"><i data-lucide="menu"></i></button>
+                                    <button class="back-btn" id="back-to-home"><i data-lucide="arrow-left"></i></button>
+                                    <div class="surah-nav-controls">
+                                        <button id="prev-surah-btn" class="nav-arrow" title="Previous Surah"><i data-lucide="chevron-left"></i></button>
+                                        <select id="surah-selector" class="surah-dropdown">
+                                            <!-- Options injected via JS -->
+                                        </select>
+                                        <button id="next-surah-btn" class="nav-arrow" title="Next Surah"><i data-lucide="chevron-right"></i></button>
+                                    </div>
+                                </div>
+                                <div class="read-actions">
+                                    <button id="view-in-pdf-btn" class="action-btn" title="View in PDF">
+                                        <i data-lucide="file-text"></i> PDF
+                                    </button>
+                                    <button id="play-surah-btn" class="action-btn" title="Play Entire Surah">
+                                        <i data-lucide="play"></i> Play
+                                    </button>
+                                    <button id="toggle-info-panel" class="action-btn" title="Info"><i data-lucide="info"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="read-content-scroll">
+                                <div class="bismillah-container" id="bismillah-section">
+                                    <span class="arabic-text bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</span>
+                                </div>
+
+                                <div id="ayah-container" class="ayah-container">
+                                    <!-- Ayahs Injected Here -->
+                                </div>
                             </div>
                         </div>
-                        <div class="read-actions">
-                            <button id="view-in-pdf-btn" class="action-btn" title="View in PDF">
-                                <i data-lucide="file-text"></i> PDF
-                            </button>
-                            <button id="play-surah-btn" class="action-btn" title="Play Entire Surah">
-                                <i data-lucide="play"></i> Play
-                            </button>
-                            <button id="toggle-info-panel" class="action-btn" title="Info"><i
-                                    data-lucide="info"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="bismillah-container" id="bismillah-section">
-                        <!-- Corrected Bismillah Text -->
-                        <span class="arabic-text bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</span>
-                    </div>
-
-                    <div id="ayah-container" class="ayah-container">
-                        <!-- Ayahs Injected Here -->
                     </div>
                 </div>
 
