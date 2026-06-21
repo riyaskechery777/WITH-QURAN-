@@ -305,10 +305,13 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .pdf-container {
     flex: 1;
+    min-height: 0;
     background: var(--bg-secondary);
     border-radius: 1rem;
     overflow: hidden;
