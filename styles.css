@@ -1079,27 +1079,56 @@ input[type=range]::-webkit-slider-runnable-track {
     border-radius: 2px;
 }
 
-/* Audio Player Enhanced */
+/* Audio Player Enhanced — slide-up on first play */
+@keyframes playerSlideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 .audio-player {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: var(--bg-secondary);
     border-top: 1px solid var(--border-color);
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
-    z-index: 100;
-    box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.05);
-    backdrop-filter: blur(16px);
-    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 200;
+    box-shadow: 0 -4px 24px -1px rgb(0 0 0 / 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.92);
+
+    /* Hidden by default — pushed fully below the viewport */
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+
+    /* Smooth transition for both show and hide */
+    transition:
+        transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.3s ease;
+    will-change: transform, opacity;
+}
+
+/* Triggered by JS when any ayah / surah starts playing */
+.audio-player.audio-player--visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
 }
 
 [data-theme="dark"] .audio-player {
-    background-color: rgba(30, 41, 59, 0.9);
+    background-color: rgba(15, 23, 42, 0.92);
 }
 
 .audio-controls {
@@ -1241,13 +1270,17 @@ input[type=range]::-webkit-slider-runnable-track {
         gap: 1rem;
     }
 
-    /* Audio Player */
+    /* Audio Player — sits above the 60px bottom nav on mobile */
     .audio-player {
-        bottom: 70px;
+        bottom: 60px;
         padding: 0.75rem 1rem;
         flex-direction: column;
         gap: 0.75rem;
         border-radius: 1rem 1rem 0 0;
+        /* Override transition for a tighter feel on mobile */
+        transition:
+            transform 0.38s cubic-bezier(0.34, 1.4, 0.64, 1),
+            opacity 0.28s ease;
     }
 
     .audio-progress {

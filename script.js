@@ -550,7 +550,11 @@ function playAyah(verseKey) {
     const url = `https://everyayah.com/data/Alafasy_128kbps/${padSurah}${padAyah}.mp3`;
 
     audioPlayer.src = url;
-    document.getElementById('audio-player-bar').classList.remove('hidden');
+    // Show the player bar with smooth slide-up animation (only adds class once)
+    const playerBar = document.getElementById('audio-player-bar');
+    if (!playerBar.classList.contains('audio-player--visible')) {
+        playerBar.classList.add('audio-player--visible');
+    }
     document.getElementById('audio-surah-name').textContent = state.currentSurah ? state.currentSurah.name_simple : 'Surah ' + surah;
     document.getElementById('audio-ayah-number').textContent = `Ayah ${ayah}`;
 
