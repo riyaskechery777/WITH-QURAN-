@@ -520,42 +520,101 @@ body {
     gap: 1.5rem;
 }
 
-/* Surah Card Polish */
+/* ── Surah Card — Base ─────────────────────────────── */
 .surah-card {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
     padding: 1.75rem;
     border-radius: 1rem;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
     overflow: hidden;
+
+    /* Transition individual properties for GPU performance */
+    transition:
+        transform   0.3s ease,
+        box-shadow  0.3s ease,
+        border-color 0.3s ease,
+        background-color 0.3s ease;
+    will-change: transform, box-shadow;
 }
 
-.surah-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--accent-color);
+/* Ambient green glow layer — sits behind the card content */
+.surah-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        ellipse at 60% 50%,
+        rgba(16, 185, 129, 0.07) 0%,
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 0;
 }
 
+/* Top accent bar — sweeps in from left on hover */
 .surah-card::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
-    background: var(--accent-color);
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        #059669 0%,
+        #10B981 50%,
+        #34D399 100%
+    );
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 3px 3px 0 0;
+    z-index: 1;
 }
 
+/* ── Surah Card — Hover State ──────────────────────── */
+.surah-card:hover {
+    /* Lift exactly 4px as requested */
+    transform: translateY(-4px);
+
+    /* Layer 1: tight dark shadow for depth
+       Layer 2: wide Islamic green ambient glow */
+    box-shadow:
+        0 8px 20px -4px rgba(0, 0, 0, 0.15),
+        0 0  28px -6px rgba(16, 185, 129, 0.35);
+
+    /* Soft Islamic green border */
+    border-color: #10B981;
+
+    /* Very subtle green card tint */
+    background-color: color-mix(in srgb, var(--bg-secondary) 96%, #10B981 4%);
+}
+
+/* Reveal ambient glow on hover */
+.surah-card:hover::before {
+    opacity: 1;
+}
+
+/* Sweep accent bar in on hover */
 .surah-card:hover::after {
     transform: scaleX(1);
+}
+
+/* Dark-mode shadow stays readable */
+[data-theme="dark"] .surah-card:hover {
+    box-shadow:
+        0 8px 24px -4px rgba(0, 0, 0, 0.45),
+        0 0  32px -6px rgba(52, 211, 153, 0.25);
+    border-color: #34D399;
+    background-color: color-mix(in srgb, var(--bg-secondary) 94%, #064E3B 6%);
 }
 
 .surah-number {
@@ -568,10 +627,22 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    /* Soft square */
     font-weight: 700;
     margin-right: 1.25rem;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    /* Ring expands on card hover via sibling + parent selector */
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition:
+        outline-color 0.3s ease,
+        background-color 0.3s ease;
+}
+
+.surah-card:hover .surah-number {
+    outline-color: rgba(16, 185, 129, 0.45);
+    background-color: rgba(16, 185, 129, 0.18);
 }
 
 .surah-details {
@@ -592,9 +663,15 @@ body {
 .surah-name-ar {
     font-family: var(--font-arabic);
     font-size: 1.5rem;
-    /* Larger Arabic */
     color: var(--text-primary);
     text-align: right;
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.surah-card:hover .surah-name-ar {
+    color: var(--text-accent);
 }
 
 .surah-verses-count {
